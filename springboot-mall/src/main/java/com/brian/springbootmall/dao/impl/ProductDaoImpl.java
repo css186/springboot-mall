@@ -23,13 +23,7 @@ public class ProductDaoImpl implements ProductDao {
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Override
-    public Integer countProduct(ProductQueryParams productQueryParams) {
-        // SQL query
-        String sql = "SELECT COUNT(*) FROM product WHERE 1=1";
-
-        Map<String, Object> map = new HashMap<>();
-
+    private String addFilterSql(String sql, Map<String, Object> map, ProductQueryParams productQueryParams) {
         // Filtering Search
         if (productQueryParams.getCategory() != null) {
             sql = sql + " AND category = :category";
@@ -41,6 +35,19 @@ public class ProductDaoImpl implements ProductDao {
             sql = sql + " AND product_name LIKE :search";
             map.put("search", "%" + productQueryParams.getSearch() + "%");
         }
+
+        return sql;
+    }
+
+    @Override
+    public Integer countProduct(ProductQueryParams productQueryParams) {
+        // SQL
+        String sql = "SELECT COUNT(*) FROM product WHERE 1=1";
+
+        Map<String, Object> map = new HashMap<>();
+
+        // Filtering
+        sql = addFilterSql(sql, map, productQueryParams);
 
         Integer totalCount = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
 
@@ -56,17 +63,8 @@ public class ProductDaoImpl implements ProductDao {
 
         Map<String, Object> map = new HashMap<>();
 
-        // Filtering Search
-        if (productQueryParams.getCategory() != null) {
-            sql = sql + " AND category = :category";
-            map.put("category", productQueryParams.getCategory().name());
-        }
-
-        // Keyword Search
-        if (productQueryParams.getSearch() != null) {
-            sql = sql + " AND product_name LIKE :search";
-            map.put("search", "%" + productQueryParams.getSearch() + "%");
-        }
+        // Filtering
+        sql = addFilterSql(sql, map, productQueryParams);
 
         // Sorting and Order by
         sql = sql + " ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();
