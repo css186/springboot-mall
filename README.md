@@ -7,3 +7,12 @@ A Back-end Server for E-commerce Website
 - Unit Test: JUnit5, H2 database
 - Dao Layer: Spring JDBC
 
+## Functionality
+- Products:
+  - Display All products
+  - CRUD operation on products
+  - Filtering / Searching / Sorting / Pagination on products
+
+ - Users:
+   - Account Registration / Validation
+   - Log-in
