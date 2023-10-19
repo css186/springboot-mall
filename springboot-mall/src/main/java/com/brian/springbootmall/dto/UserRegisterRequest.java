@@ -1,7 +1,6 @@
 package com.brian.springbootmall.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 public class UserRegisterRequest {
 
