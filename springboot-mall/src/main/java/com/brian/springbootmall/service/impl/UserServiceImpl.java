@@ -1,6 +1,7 @@
 package com.brian.springbootmall.service.impl;
 
 import com.brian.springbootmall.dao.UserDao;
+import com.brian.springbootmall.dto.UserLoginRequest;
 import com.brian.springbootmall.dto.UserRegisterRequest;
 import com.brian.springbootmall.model.User;
 import com.brian.springbootmall.service.UserService;
@@ -15,7 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserServiceImpl implements UserService {
 
     private final static Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-
 
     @Autowired
     private UserDao userDao;
@@ -38,5 +38,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Integer userId) {
         return userDao.getUserById(userId);
+    }
+
+    @Override
+    public User login(UserLoginRequest userLoginRequest) {
+        User user = userDao.getUserByEmail(userLoginRequest.getEmail());
+
+        // check user's existence
+        if (user == null) {
+            log.warn("This email: {} is not registered", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        // check password
+        if (user.getPassword().equals(userLoginRequest.getPassword())) {
+            return user;
+        } else {
+            log.warn("Password incorrect for email: {}", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 }
