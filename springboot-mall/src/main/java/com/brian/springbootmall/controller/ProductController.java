@@ -5,6 +5,7 @@ import com.brian.springbootmall.dto.ProductQueryParams;
 import com.brian.springbootmall.dto.ProductRequest;
 import com.brian.springbootmall.model.Product;
 import com.brian.springbootmall.service.ProductService;
+import com.brian.springbootmall.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,37 @@ public class ProductController {
     ProductService productService;
 
     // Return list of products
+//    @GetMapping("/products")
+//    public ResponseEntity<List<Product>>  getProducts(
+//            // Filtering (filter by category & search by keyword)
+//            @RequestParam(required = false) ProductCategory category,
+//            @RequestParam(required = false) String search,
+//
+//            // Sorting
+//            @RequestParam(defaultValue = "created_date") String orderBy,
+//            @RequestParam(defaultValue = "desc") String sort,
+//
+//            // Pagination
+//            @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,
+//            @RequestParam(defaultValue = "0") @Min(0) Integer offset
+//    ) {
+//        ProductQueryParams productQueryParams = new ProductQueryParams();
+//        productQueryParams.setCategory(category);
+//        productQueryParams.setSearch(search);
+//        productQueryParams.setOrderBy(orderBy);
+//        productQueryParams.setSort(sort);
+//        productQueryParams.setLimit(limit);
+//        productQueryParams.setOffset(offset);
+//
+//        List<Product> productList = productService.getProducts(productQueryParams);
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(productList);
+//    }
+
+    // Enhanced way to return lists of product
+    // return total number of data inside database for better pagination
     @GetMapping("/products")
-    public ResponseEntity<List<Product>>  getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             // Filtering (filter by category & search by keyword)
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search,
@@ -47,7 +77,18 @@ public class ProductController {
 
         List<Product> productList = productService.getProducts(productQueryParams);
 
-        return ResponseEntity.status(HttpStatus.OK).body(productList);
+        // Count total number of data
+
+        Integer total = productService.countProduct(productQueryParams);
+
+        // Convert to page object
+        Page<Product> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResults(productList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
     // Read
