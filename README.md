@@ -16,3 +16,4 @@ A Back-end Server for E-commerce Website
  - Users:
    - Account Registration / Validation
    - Log-in
+   - MD5 Hash
