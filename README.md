@@ -13,7 +13,11 @@ A Back-end Server for E-commerce Website
   - CRUD operation on products
   - Filtering / Searching / Sorting / Pagination on products
 
- - Users:
-   - Account Registration / Validation
-   - Log-in
-   - MD5 Hash
+- Users:
+  - Account Registration / Validation
+  - Log-in
+  - MD5 Hash
+
+- Orders:
+  - Orders
+  - Ordered Items(Order Details)  
