@@ -21,3 +21,9 @@ A Back-end Server for E-commerce Website
 - Orders:
   - Orders
   - Ordered Items(Order Details)  
+
+
+## Deployment
+- Platform: Heroku
+https://springboot-mall-700c315e88bb.herokuapp.com/
+- Database: PlanetScale
