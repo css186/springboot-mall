@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### db setting ###
+/src/main/resources/env.properties
